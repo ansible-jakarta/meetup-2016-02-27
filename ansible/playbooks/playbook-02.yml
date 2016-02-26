@@ -1,12 +1,4 @@
 ---
-- hosts: all
-  remote_user: vagrant
-  vars:
-    apt_cache_valid_time: 3600
-  roles:
-    - role: ansible_user
-    - role: apt_upgrade
-
 - hosts: elasticsearch
   vars:
     apt_cache_valid_time: 3600
