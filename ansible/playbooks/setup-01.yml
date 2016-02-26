@@ -2,7 +2,6 @@
 - hosts: all
   vars:
     apt_cache_valid_time: 3600
-    apt_upgrade_type: full
   tasks:
     - block:
         - name: ansible user
@@ -31,7 +30,7 @@
           apt:
             cache_valid_time: "{{ apt_cache_valid_time|default(omit) }}"
             update_cache: yes
-            upgrade: "{{ apt_upgrade_type }}"
+            upgrade: full
 
       become: true
       become_method: sudo
