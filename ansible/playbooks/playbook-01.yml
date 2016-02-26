@@ -1,0 +1,106 @@
+---
+- hosts: host2
+  vars:
+    apt_cache_valid_time: 3600
+  tasks:
+    - block:
+        - name: add openjdk-r ppa
+          apt_repository:
+            repo: 'ppa:openjdk-r/ppa'
+            state: present
+            update_cache: true
+
+        - name: install openjdk
+          apt:
+            name: "openjdk-8-jre-headless"
+            update_cache: true
+            state: present
+            cache_valid_time: "{{ apt_cache_valid_time|default(omit) }}"
+
+        - name: set openjdk as default java
+          alternatives:
+             name: java
+             path: "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java"
+
+        - name: add elasticsearch apt key
+          apt_key:
+            url: https://packages.elastic.co/GPG-KEY-elasticsearch
+            state: present
+            validate_certs: yes
+            id: D88E42B4
+
+        - name: add elasticsearch repository
+          apt_repository:
+            repo: 'deb http://packages.elastic.co/elasticsearch/2.x/debian stable main'
+            state: present
+            update_cache: yes
+            validate_certs: yes
+
+        - name: install elasticsearch
+          apt:
+            cache_valid_time: "{{ apt_cache_valid_time|default(omit) }}"
+            name: elasticsearch
+            state: present
+            install_recommends: no
+            update_cache: yes
+
+        - name: copy elasticsearch config
+          template:
+            src: elasticsearch.yml.j2
+            dest: "/etc/elasticsearch/elasticsearch.yml"
+            owner: root
+            group: elasticsearch
+            mode: 0750
+            backup: true
+          notify: restart elasticsearch
+
+        - name: start elasticsearch & enable at boot
+          service:
+            name: elasticsearch
+            state: started
+            enabled: yes
+
+        - name: add kibana repo
+          apt_repository:
+            repo: "deb http://packages.elastic.co/kibana/4.4/debian stable main"
+            state: present
+            update_cache: yes
+            validate_certs: yes
+
+        - name: install kibana
+          apt:
+            cache_valid_time: "{{ apt_cache_valid_time|default(omit) }}"
+            install_recommends: no
+            name: kibana
+            state: latest
+            update_cache: yes
+
+        - name: copy kibana config
+          template:
+            src: kibana.yml.j2
+            dest: "/opt/kibana/config/kibana.yml"
+            backup: true
+          notify: restart kibana
+
+        - name: start kibana
+          service:
+            name: kibana
+            state: started
+            enabled: yes
+
+      become: true
+      become_method: sudo
+  handlers:
+    - name: restart elasticsearch
+      become: yes
+      become_method: sudo
+      service:
+        name: elasticsearch
+        state: restarted
+
+    - name: restart kibana
+      become: true
+      become_method: sudo
+      service:
+        name: kibana
+        state: restarted
