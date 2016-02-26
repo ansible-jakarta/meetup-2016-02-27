@@ -5,5 +5,3 @@
   service:
     name: kibana
     state: restarted
-  tags:
-    - kibana
