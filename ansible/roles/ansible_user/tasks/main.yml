@@ -8,14 +8,20 @@
       comment: Ansible provisioner
       shell:   /bin/bash
       system:  yes
-      generate_ssh_key: true
-      groups:  sudo
       state:   present
-    
+
+  - name: let ansible have passwordless sudo
+    copy:
+      dest: /etc/sudoers.d/ansible
+      content: "ansible ALL=(ALL:ALL) NOPASSWD: ALL"
+      owner: root
+      group: root
+      mode: 0440
+
   - name: authorize ansible key
     authorized_key:
       exclusive: yes
-      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      key: "{{ lookup('file', '/etc/ansible/.ssh/id_rsa_ansible.pub') }}"
       user: ansible
 
   become: true
