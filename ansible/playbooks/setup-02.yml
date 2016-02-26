@@ -1,0 +1,8 @@
+---
+- hosts: all
+  vars:
+    apt_cache_valid_time: 3600
+    apt_upgrade_type: full
+  roles:
+    - role: ansible_user
+    - role: apt_upgrade
