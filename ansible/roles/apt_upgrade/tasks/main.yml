@@ -1,19 +1,5 @@
 ---
 - block:
-    - name: configure apt sources.list
-      template:
-        src:    sources.list.j2
-        dest:   /etc/apt/sources.list
-        owner:  root
-        group:  root
-        mode:   0644
-      register: apt_sources
-
-    - name: update apt cache
-      apt:
-        update_cache: yes
-      when: apt_sources.changed
-    
     - name: apt-get upgrade
       apt:
         cache_valid_time: "{{ apt_cache_valid_time|default(omit) }}"

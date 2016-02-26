@@ -1,0 +1,39 @@
+---
+- hosts: all
+  vars:
+    apt_cache_valid_time: 3600
+    apt_upgrade_type: full
+  tasks:
+    - block:
+        - name: ansible user
+          user:
+            name:    ansible
+            comment: Ansible provisioner
+            shell:   /bin/bash
+            system:  yes
+            generate_ssh_key: true
+            groups:  sudo
+            state:   present
+      
+        - name: authorize ansible key
+          delegate_to: localhost
+          become: true
+          become_method: sudo
+          debug:
+            msg: "{{ lookup('file', '~ansible/.ssh/id_rsa.pub') }}"
+
+        - name: authorize ansible key
+          delegate_to: localhost
+          authorized_key:
+            exclusive: yes
+            key: "{{ lookup('file', '~ansible/.ssh/id_rsa.pub') }}"
+            user: ansible
+      
+        - name: apt-get upgrade
+          apt:
+            cache_valid_time: "{{ apt_cache_valid_time|default(omit) }}"
+            update_cache: yes
+            upgrade: "{{ apt_upgrade_type }}"
+
+      become: true
+      become_method: sudo
