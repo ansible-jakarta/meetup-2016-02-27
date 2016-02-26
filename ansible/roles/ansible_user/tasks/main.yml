@@ -1,0 +1,25 @@
+---
+# tasks file for users/ansible
+
+- block:
+  - name: ansible user
+    user:
+      name:    ansible
+      comment: Ansible provisioner
+      shell:   /bin/bash
+      system:  yes
+      generate_ssh_key: true
+      groups:  sudo
+      state:   present
+    
+  - name: authorize ansible key
+    authorized_key:
+      exclusive: yes
+      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      user: ansible
+
+  become: true
+  become_method: sudo
+  
+  tags:
+    - ansible_user

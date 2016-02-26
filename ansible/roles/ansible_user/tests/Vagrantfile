@@ -1,0 +1,43 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  # vagrant-cachier configuration
+  # to install run: 'vagrant plugin install vagrant-cachier'
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+    config.cache.auto_detect = true
+    # optionally enable NFS to speedup virtualbox shares
+    #
+    # config.cache.synced_folder_opts = {
+    #   type: :nfs,
+    #   mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+    # }
+  end
+
+  # enable host only network (needed for NFS shares)
+  # config.vm.network "private_network", type: "dhcp"
+
+  # define machines
+  machines = []
+  machines << { name: "precise", box: "ubuntu/precise64" }
+  machines << { name: "trusty", box: "ubuntu/trusty64" }
+
+  # iterate through machines
+  machines.each do |machine|
+    # define config for given machine
+    config.vm.define machine[:name] do |conf|
+      conf.vm.box = machine[:box]
+
+      # provision all machines together, once last machine is up
+      if machine == machines.last
+        conf.vm.provision :ansible do |ansible|
+          ansible.playbook = "test.yml"
+          ansible.limit = "all"
+          ansible.verbose = "v"
+        end
+      end
+    end
+  end
+end
