@@ -19,7 +19,7 @@ server.host: "{{ kibana_server_host }}"
 
 # The Elasticsearch instance to use for all your queries.
 # elasticsearch.url: "http://localhost:9200"
-{% if kibana_es_host is defined and kibana_es_port is defined %}
+{% if kibana_elasticsearch_url is defined %}
 elasticsearch.url: "{{ kibana_elasticsearch_url }}"
 {% endif %}
 
