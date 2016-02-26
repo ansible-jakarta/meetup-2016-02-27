@@ -8,5 +8,6 @@
 - hosts: kibana
   vars:
     apt_cache_valid_time: 3600
+    kibana_elasticsearch_url: "http://192.168.20.20:9200"
   roles:
     - role: kibana-4.4
