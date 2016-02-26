@@ -31,7 +31,7 @@ Vagrant.configure(2) do |config|
     ansible.vm.hostname = "ansible"
     # create private network
     ansible.vm.network "private_network", ip: "192.168.20.10", virtualbox__intnet: true
-    #
+    # sync ansible folder
     ansible.vm.synced_folder "ansible", "/etc/ansible", create: true
 
     ansible.vm.provider "virtualbox" do |v|
@@ -57,6 +57,8 @@ Vagrant.configure(2) do |config|
     es.vm.hostname = "es"
     # create private network
     es.vm.network "private_network", ip: "192.168.20.20", virtualbox__intnet: true
+    # setup port forwarding
+    es.vm.network "forwarded_port", guest: 5601, host: 25601
 
     es.vm.provider "virtualbox" do |v|
       v.gui = false
@@ -79,6 +81,8 @@ Vagrant.configure(2) do |config|
     kibana.vm.hostname = "kibana"
     # create private network
     kibana.vm.network "private_network", ip: "192.168.20.30", virtualbox__intnet: true
+    # setup port forwarding
+    kibana.vm.network "forwarded_port", guest: 5601, host: 35601
 
     kibana.vm.provider "virtualbox" do |v|
       v.gui = false
