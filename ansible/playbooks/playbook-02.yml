@@ -2,6 +2,7 @@
 - hosts: elasticsearch
   vars:
     apt_cache_valid_time: 3600
+    elasticsearch_network_bind: 0
   roles:
     - role: elasticsearch
 
