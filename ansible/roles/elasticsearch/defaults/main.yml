@@ -1,0 +1,9 @@
+---
+elasticsearch_conf_dir: /etc/elasticsearch
+
+# elasticsearch_path_data: /var/lib/elasticsearch
+# elasticsearch_path_logs: /var/log/elasticsearch
+# elasticsearch_network_bind: 0
+
+# elasticsearch_http_port: 9200
+# elasticsearch_bootstrap_mlockall: true

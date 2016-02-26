@@ -1,0 +1,12 @@
+---
+kibana_dir: /opt/kibana
+
+#kibana_server_port: 5601
+#kibana_server_host: "0.0.0.0"
+
+#kibana_elasticsearch_url: "http://localhost:9200"
+
+#kibana_logging_dest: "stdout"
+#kibana_logging_silent: false
+#kibana_logging_quiet: false
+#kibana_logging_verbose: false

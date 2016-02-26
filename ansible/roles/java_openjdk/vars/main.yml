@@ -1,0 +1,2 @@
+---
+java_openjdk_path: "/usr/lib/jvm/java-{{ java_openjdk_version }}-openjdk-amd64/jre/bin/java"

@@ -1,0 +1,12 @@
+host1 ansible_ssh_host=192.168.20.10
+host2 ansible_ssh_host=192.168.20.20
+host3 ansible_ssh_host=192.168.20.30
+
+[ansible]
+host1
+
+[elasticsearch]
+host2
+
+[kibana]
+host3

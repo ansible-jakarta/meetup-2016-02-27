@@ -1,0 +1,9 @@
+---
+- name: restart kibana
+  become: true
+  become_method: sudo
+  service:
+    name: kibana
+    state: restarted
+  tags:
+    - kibana

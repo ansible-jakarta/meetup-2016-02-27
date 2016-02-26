@@ -1,0 +1,24 @@
+---
+- block:
+    - name: add openjdk-r ppa
+      apt_repository:
+        repo: 'ppa:openjdk-r/ppa'
+        state: present
+        update_cache: true
+      when: java_openjdk_use_ppa or java_openjdk_version == 8
+
+    - name: install openjdk
+      apt:
+        name: "openjdk-{{ java_openjdk_version }}-{{ java_openjdk_package }}"
+        update_cache: true
+        state: present
+        cache_valid_time: "{{ apt_cache_valid_time|default(omit) }}"
+
+    - name: set openjdk as default java
+      alternatives:
+         name: java
+         path: "{{ java_openjdk_path }}"
+  become: true
+  become_method: sudo
+  tags:
+    - java_openjdk
